@@ -1,16 +1,16 @@
 <template>
-    <v-container class="hero-section py-16 px-8" style="max-width: 1200px; ">
+    <v-container class="hero-section py-16 px-8 my-sm-14" style="max-width: 1200px; ">
       <v-row align="center">
         <!-- Columna izquierda: texto -->
         <v-col cols="12" md="6">
-          <v-chip  draggable color="primary" variant="tonal" class="mb-6">
+          <v-chip  draggable color="#2563EB" variant="tonal" class="mb-6">
             <v-icon start size="8" color="success">mdi-circle</v-icon>
             Disponibilidad en tiempo real
           </v-chip>
 
           <h1 class="hero-title mb-4">
             Reserva tu espacio de trabajo
-            <span class="text-primary">sin fricción</span>
+            <span style="color: #2563EB;">sin fricción</span>
           </h1>
 
           <p class="hero-subtitle mb-8">
@@ -19,8 +19,8 @@
             sola plataforma.
           </p>
 
-          <div class="d-flex ga-4 mb-10">
-            <v-btn color="primary" size="large" rounded="lg">
+          <div class="d-flex flex-column flex-sm-row ga-4 mb-10">
+            <v-btn color="#2563EB" size="large" rounded="lg">
               Ver espacios disponibles
             </v-btn>
             <v-btn variant="outlined" size="large" rounded="lg">
@@ -58,8 +58,8 @@
             <v-card-text class="pa-6">
               <h3 class="mb-1">Sala 1</h3>
               <p class="text-grey mb-4">Capacidad: 12 personas</p>
-
-              <div class="d-flex ga-4 mb-4 amenities">
+              
+              <div class="d-flex flex-wrap ga-4 mb-4 amenities">
                 <span><v-icon size="18">mdi-wifi</v-icon> WiFi</span>
                 <span><v-icon size="18">mdi-coffee</v-icon> Coffee</span>
                 <span><v-icon size="18">mdi-monitor</v-icon> Pantallas</span>
@@ -73,16 +73,43 @@
                   <span class="price">$80 MXN</span>
                   <span class="text-grey"> / hora</span>
                 </div>
-                <v-btn color="primary" rounded="lg">Reservar</v-btn>
+                <v-btn color="#2563EB" rounded="lg">Reservar</v-btn>
               </div>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
+
+    <v-container class="benefits-section" style="max-width: 100%; ">
+      <h2 class="text-center benefits-title mb-8">Disfruta de todos los beneficios</h2>
+
+      <v-row justify="center" class="benefits-row">
+        <v-col
+          v-for="benefit in benefits"
+          :key="benefit.label"
+          cols="4"
+          sm="3"
+          md="auto"
+          class="text-center px-5"
+        >
+          <v-icon size="48" color="grey-darken-3">{{ benefit.icon }}</v-icon>
+          <p class="benefit-label">{{ benefit.label }}</p>
+        </v-col>
+      </v-row>
+    </v-container>
 </template>
 
 <script setup>
+const benefits = [
+  { icon: 'mdi-account-tie', label: 'Imagen Corporativa' },
+  { icon: 'mdi-printer', label: 'Impresión' },
+  { icon: 'mdi-account-group', label: 'Salas de Juntas' },
+  { icon: 'mdi-handshake', label: 'Networking' },
+  { icon: 'mdi-car', label: 'Estacionamiento' },
+  { icon: 'mdi-coffee-maker', label: 'Coffee Station' },
+  { icon: 'mdi-wifi', label: 'Internet' },
+]
 </script>
 
 <style scoped>
@@ -131,6 +158,21 @@
 .price {
   font-size: 20px;
   font-weight: 800;
-  color: #3b6ef6;
+  color: #2563EB;
+}
+
+.benefits-section {
+  background-color: white;
+}
+.benefits-title {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #4a4a4a;
+}
+.benefit-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
 }
 </style>
