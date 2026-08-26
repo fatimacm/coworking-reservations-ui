@@ -79,7 +79,7 @@
 
                 <v-col cols="12" md="auto" class="d-flex align-end">
                     <v-btn
-                    color="primary"
+                    color="#2563EB"
                     size="large"
                     rounded="lg"
                     block

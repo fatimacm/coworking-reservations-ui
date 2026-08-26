@@ -70,7 +70,7 @@
         </p>
 
         <v-btn
-          color="primary"
+          color="#2563EB"
           size="large"
           rounded="lg"
           @click="$emit('reserve', room)"
