@@ -19,8 +19,8 @@
     <v-spacer />
 
     <!-- Acciones derecha -->
-    <router-link to="/" class="nav-link mr-6">Iniciar sesión</router-link>
-    <v-btn style="background-color: #2563EB; color: white;">Reservar ahora</v-btn>
+    <router-link to="/login" class="nav-link mr-6">Iniciar sesión</router-link>
+    <v-btn to="/spaces" style="background-color: #2563EB; color: white;">Reservar ahora</v-btn>
   </v-app-bar>
   
   <v-main style="background-color: #EFF6FF;">

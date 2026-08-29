@@ -4,7 +4,7 @@
             <div>
                 <h1 class="font-weight-bold">Coworking Room</h1>
                 <p class="text-medium-emphasis mb-0">
-                6 espacios disponibles en tu ciudad
+                {{ spaces.length }} espacios disponibles en tu ciudad
                 </p>
             </div>
 
@@ -95,7 +95,7 @@
 
         <div class="d-flex align-center justify-space-between mb-8">
             <p class="text-medium-emphasis mb-0">
-                Mostrando 6 de 6 espacios
+                Mostrando {{ spaces.length }} de {{ spaces.length }} espacios
             </p>
             
             <v-select
@@ -109,18 +109,44 @@
                 />
         </div>
     
-        <RoomCard @reserve="handleReservation" />
+        <v-progress-linear
+            v-if="isLoading"
+            indeterminate
+            color="primary"
+            class="mb-6"
+        />
+
+        <v-alert
+            v-else-if="errorMessage"
+            type="error"
+            variant="tonal"
+            class="mb-6"
+        >
+            {{ errorMessage }}
+        </v-alert>
+
+        <div v-else class="d-flex flex-column ga-6">
+            <RoomCard
+                v-for="space in spaces"
+                :key="space.id"
+                :room="space"
+            />
+        </div>
         
     </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import RoomCard from '../components/RoomCard.vue'
+import api from '../services/api'
 
 const emit = defineEmits(['apply-filters'])
 
 const showFilters = ref(false)
+const spaces = ref([])
+const isLoading = ref(true)
+const errorMessage = ref('')
 
 const selectedFilters = ref({
   spaceType: 'Todos',
@@ -146,6 +172,23 @@ const sortOptions = [
 function applyFilters() {
   emit('apply-filters', { ...selectedFilters.value })
 }
+
+async function fetchSpaces() {
+  isLoading.value = true
+  errorMessage.value = ''
+
+  try {
+    const { data } = await api.get('/spaces')
+    spaces.value = data
+  } catch (error) {
+    console.error('Unable to load spaces:', error)
+    errorMessage.value = 'No pudimos cargar los espacios. Intenta de nuevo más tarde.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(fetchSpaces)
 </script>
 
 <style scoped>

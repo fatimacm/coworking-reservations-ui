@@ -30,17 +30,8 @@
       </div>
 
       <div class="room-card__details">
-        <v-chip
-          color="primary"
-          variant="tonal"
-          size="small"
-          class="mb-4 font-weight-bold"
-        >
-          {{ room.type }}
-        </v-chip>
-
-        <h2 class="text-h5 font-weight-bold mb-2">
-          {{ room.name }}
+        <h2 class="text-h5 font-weight-bold mb-2 text-uppercase">
+          {{ room.name }}<span v-if="room.subtitle"> | {{ room.subtitle }}</span>
         </h2>
 
         <p class="text-body-1 mb-6">
@@ -61,12 +52,12 @@
 
       <div class="room-card__price">
         <div>
-          <span class="price">{{ room.price }} MXN</span>
+        <span class="price">${{ room.price_per_hour }} MXN</span>
           <span class="price-unit"> / hora</span>
         </div>
 
         <p class="text-body-2 mt-2 mb-6">
-          Mínimo {{ room.minimumHours }} hora
+          Mínimo {{ room.min_hours }} {{ room.min_hours === 1 ? 'hora' : 'horas' }}
         </p>
 
         <v-btn
@@ -87,28 +78,14 @@ import { ref } from 'vue'
 
 defineEmits(['reserve'])
 
-const activeImage = ref(0)
+defineProps({
+  room: {
+    type: Object,
+    required: true,
+  },
+})
 
-const room = {
-  name: 'Sala 1',
-  type: 'SALA DE JUNTAS',
-  capacity: 12,
-  price: '$80',
-  minimumHours: 1,
-  images: [
-    'https://placehold.co/800x600/7b4a2d/7b4a2d',
-    'https://placehold.co/800x600/8d5a3b/8d5a3b',
-    'https://placehold.co/800x600/694026/694026',
-    'https://placehold.co/800x600/9d6847/9d6847',
-    'https://placehold.co/800x600/5f3822/5f3822',
-  ],
-  amenities: [
-    { label: 'WiFi', icon: 'mdi-wifi' },
-    { label: 'Coffe', icon: 'mdi-coffee-outline' },
-    { label: 'Pantallas', icon: 'mdi-monitor' },
-    { label: 'Aire acondicionado', icon: 'mdi-weather-sunny' },
-  ],
-}
+const activeImage = ref(0)
 </script>
 
 <style scoped>
