@@ -9,10 +9,15 @@
         <p class="auth-subtitle mb-0">Inicia sesión para administrar tus reservas.</p>
       </div>
 
-      <v-form>
+      <v-alert v-if="errorMessage" type="error" variant="tonal" density="compact" class="mb-4">
+        {{ errorMessage }}
+      </v-alert>
+
+      <v-form @submit.prevent="handleLogin">
         <label class="field-label" for="login-email">Correo electrónico</label>
         <v-text-field
           id="login-email"
+          v-model="form.email"
           type="email"
           placeholder="tu@correo.com"
           variant="outlined"
@@ -28,6 +33,7 @@
         </div>
         <v-text-field
           id="login-password"
+          v-model="form.password"
           type="password"
           placeholder="Ingresa tu contraseña"
           variant="outlined"
@@ -38,7 +44,14 @@
           hide-details
         />
 
-        <v-btn color="#2563EB" size="large" rounded="lg" block>
+        <v-btn
+          type="submit"
+          color="#2563EB"
+          size="large"
+          rounded="lg"
+          block
+          :loading="loading"
+        >
           Iniciar sesión
         </v-btn>
       </v-form>
@@ -52,6 +65,56 @@
     </v-card>
   </v-container>
 </template>
+
+<script setup>
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import api from '../services/api'
+import { useAuthStore } from '../stores/authStore'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const form = reactive({
+  email: '',
+  password: '',
+})
+
+const loading = ref(false)
+const errorMessage = ref('')
+
+async function handleLogin() {
+  errorMessage.value = ''
+  loading.value = true
+
+  try {
+    // POST /login espera application/x-www-form-urlencoded, no JSON,
+    // porque el backend usa OAuth2PasswordRequestForm. El campo se llama
+    // "username" aunque aquí se le pida el correo al usuario.
+    const params = new URLSearchParams()
+    params.append('username', form.email)
+    params.append('password', form.password)
+
+    const response = await api.post('/login', params, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+
+    authStore.login(response.data.access_token)
+
+    // Redirección provisional a Home. No hay lógica de "regresar a donde
+    // estaba" todavía (eso depende de las rutas protegidas, que no existen aún).
+    router.push('/')
+  } catch (error) {
+    if (error.response?.status === 401) {
+      errorMessage.value = 'Correo o contraseña incorrectos.'
+    } else {
+      errorMessage.value = 'No se pudo iniciar sesión. Intenta de nuevo.'
+    }
+  } finally {
+    loading.value = false
+  }
+}
+</script>
 
 <style scoped>
 .auth-page {
